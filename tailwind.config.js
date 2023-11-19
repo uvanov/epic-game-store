@@ -13,6 +13,9 @@ export default {
           100: '#202020',
           200: '#363636'
         }
+      },
+      fontFamily: {
+        'rubik': 'Rubik'
       }
     },
   },
