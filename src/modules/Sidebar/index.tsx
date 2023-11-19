@@ -15,7 +15,7 @@ export const Sidebar: FC<SidebarProps> = (
   const location = useLocation()
   
   return (
-    <nav className='flex flex-col gap-1'>
+    <nav className='flex flex-col gap-1 col-start-1 col-end-2 row-start-1 row-end-3'>
       <div className="text-center">
         <img src="" alt=""/>
       </div>
