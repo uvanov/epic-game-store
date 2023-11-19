@@ -5,20 +5,21 @@ import {SiWindows} from "react-icons/si";
 import {TbHexagonLetterU} from "react-icons/tb";
 import {Outlet} from "react-router-dom";
 import {Header} from "../Header";
+import {ImPriceTag} from "react-icons/im";
 
 const tabs: ITab[] = [
   {
-    url: 'shop',
-    icon: FaShoppingBasket,
+    url: '/shop',
+    icon: ImPriceTag,
     label: 'Магазин'
   },
   {
-    url: 'library',
+    url: '/library',
     icon: SiWindows,
     label: 'Библиотека'
   },
   {
-    url: 'engine',
+    url: '/engine',
     icon: TbHexagonLetterU,
     label: 'Real Engine'
   }

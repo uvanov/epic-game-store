@@ -13,6 +13,7 @@ export const Sidebar: FC<SidebarProps> = (
 ) => {
   
   const location = useLocation()
+  console.log(location.pathname)
   
   return (
     <nav className='flex flex-col gap-1 col-start-1 col-end-2 row-start-1 row-end-3'>

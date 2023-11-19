@@ -1,20 +1,19 @@
-import {BiArrowToLeft, BiSolidUser} from "react-icons/bi";
 import {Input} from "../../shared/ui/Input";
 import {IoSearchSharp} from "react-icons/io5";
 import {Anchor} from "../../shared/ui/Anchor";
 import {Link} from "react-router-dom";
-import {TbUser} from "react-icons/tb";
+import {TbArrowLeft, TbUser} from "react-icons/tb";
 
 export const Header = () => {
   return (
     <header className='flex items-center justify-between row-start-1 row-end-2 col-start-2 col-end-3'>
       <div className='flex items-center gap-5'>
         <button>
-          <BiArrowToLeft />
+          <TbArrowLeft />
         </button>
         <Input
           icon={IoSearchSharp}
-          placeholder='Поиск...'
+          placeholder='Искать в магазине...'
           rounded
         />
       </div>
