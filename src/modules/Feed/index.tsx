@@ -1,9 +1,10 @@
 import {Button} from "../../shared/ui/Button";
-import {TbPlus, TbSpherePlus, TbUserPlus} from "react-icons/tb";
-import {useState} from "react";
-import { v4 as uuid} from 'uuid'
+import {motion} from "framer-motion";
+import {useEffect, useMemo, useState} from "react";
+import {v4 as uuid} from 'uuid'
 import {clsx} from "clsx";
 import {GoPlusCircle} from "react-icons/go";
+
 
 interface IFeedItem {
   id: string,
@@ -14,9 +15,11 @@ interface IFeedItem {
   price: number
 }
 
+const FEED_SLIDER_TIME = 6000;
+
 export const Feed = () => {
   
-  const [games, setGame] = useState<IFeedItem[]>([
+  const [games] = useState<IFeedItem[]>([
     {
       id: uuid(),
       title: 'Alan Wake 2',
@@ -35,7 +38,26 @@ export const Feed = () => {
     }
   ])
   
+  const [selectedGameIndex, setSelectedGameIndex] = useState(0)
+  
   const [selectedGame, setSelectedGame] = useState<IFeedItem>(games[0])
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if(selectedGameIndex < games.length - 1) {
+        setSelectedGameIndex(prev => prev + 1)
+      } else {
+        setSelectedGameIndex(0)
+      }
+    }, FEED_SLIDER_TIME)
+    
+    return () => clearInterval(interval)
+  }, [selectedGameIndex]);
+  
+  useEffect(() => {
+    console.log('set game', selectedGameIndex)
+    setSelectedGame(games[selectedGameIndex])
+  }, [selectedGameIndex]);
   
   const thumbnailStyled = clsx(
     'relative',
@@ -47,16 +69,25 @@ export const Feed = () => {
     'pb-10',
     'justify-end',
     'bg-cover',
-    `bg-[url('${selectedGame.thumbnailUrl}')]`,
     'after:content-[""]',
     'after:absolute',
     'after:inset-0',
     'after:bg-background/60',
   )
   
+  const imageKey = useMemo(() => Date.now(), [selectedGame.thumbnailUrl])
+  
   return (
     <div className='grid grid-cols-[auto_20%] h-[70vh] gap-10'>
-      <div className={thumbnailStyled}>
+      <motion.div
+        className={thumbnailStyled}
+        key={imageKey}
+        initial={{opacity: 0, x: 20}}
+        animate={{opacity: 1, x: 0}}
+        exit={{opacity: 0, x: 20}}
+        transition={{ ease: [0.5, 0, 0.75, 0] }}
+        style={{backgroundImage: `url(${selectedGame.thumbnailUrl})`}}
+      >
         <div className='flex flex-col gap-3 relative z-10'>
           <p className='text-xs'>
             УЖЕ ДОСТУПНО
@@ -78,20 +109,44 @@ export const Feed = () => {
             </Button>
           </div>
         </div>
-      </div>
+      </motion.div>
       <div className='flex flex-col gap-5'>
         {
-          games.map(game => (
+          games.map((game, index) => (
             <div
-              className='flex items-center gap-5 pl-5 transition-colors rounded-2xl h-20 hover:bg-dark-200 cursor-pointer'
-              onClick={() => setSelectedGame(game)}
+              className={clsx(
+                'relative',
+                'flex',
+                'items-center',
+                'gap-5',
+                'pl-5',
+                'transition-colors',
+                'rounded-2xl',
+                'h-20',
+                'hover:bg-dark-200',
+                'cursor-pointer',
+                'overflow-hidden',
+                selectedGameIndex === index && 'bg-dark-100',
+              )}
+              onClick={() => setSelectedGameIndex(index)}
             >
+              {
+                selectedGameIndex === index && (
+                  <motion.div
+                    className='absolute inset-0 bg-dark-200'
+                    initial={{ width: '0%' }}
+                    animate={{ width: '100%' }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: FEED_SLIDER_TIME / 1000 }}
+                  />
+                )
+              }
               <img
-                className='w-10'
+                className='w-10 z-10'
                 src={game.posterUrl}
                 alt=""
               />
-              <p className=''>
+              <p className='z-10'>
                 {game.title.length > 30 ? game.title.substring(0, 30).concat('...') : game.title}
               </p>
             </div>
